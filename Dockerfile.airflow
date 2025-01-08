@@ -1,0 +1,23 @@
+FROM apache/airflow:2.9.1-python3.9 AS trail_airflow
+USER root
+RUN apt-get update \
+  && apt-get autoremove -yqq --purge \
+  && apt-get clean
+RUN apt-get install -y pkg-config libhdf5-dev gcc
+# Install specific versions of the packages
+RUN pip3 install \
+    pandas \
+    scikit-learn \
+    kneed \
+    yfinance \
+    gcsfs \
+    google\
+    matplotlib \
+    mlflow \
+    optuna \
+    tensorflow==2.15.0 \
+    keras==2.15.0 \
+    pytest_mock \
+    pytest \
+    psutil \
+    pynvml
