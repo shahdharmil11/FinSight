@@ -2,25 +2,39 @@
 Adaptive Stock Prediction and Monitoring Pipeline
 
 ### Table of Contents
-1. [Introduction](#introduction)
-2. [Project Structure](#project-structure)
-3. [Prerequisites](#prerequisites)
-4. [Installation](#installation)
-5. [Usage](#usage)
-6. [Data Pipeline Workflow](#data-pipeline-workflow)
-7. [Testing](#testing)
-8. [Logging and Tracking](#logging-and-tracking)
-9. [Data Version Control](#data-version-control)
-10. [Pipeline Optimization](#pipeline-optimization)
-11. [Schema and Statistics Generation](#schema-and-statistics-generation)
-12. [Anomalies Detection and Alerts](#anomalies-detection-and-alerts)
-13. [Dividing Feature and Labels](#dividing-feature-and-labels)
-14. [Hyper Parameter Tuning](#hyper-parameter-tuning)
-15. [Modelling & Training Phase](#training-phase)
-16. [Load and Predict](#training-phase)
-17. [Retraining DAG](#retraining-dag)
-18. [Deployment](#deployment)
-19. [Conclusion](#conclusion)
+- [FinSight](#finsight)
+    - [Table of Contents](#table-of-contents)
+    - [Introduction](#introduction)
+    - [Project Structure](#project-structure)
+    - [Architecture](#architecture)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Usage](#usage)
+      - [Data and Model Pipeline](#data-and-model-pipeline)
+    - [Data Pipeline Workflow](#data-pipeline-workflow)
+    - [download\_and\_uploadToDVCBucket\_task:](#download_and_uploadtodvcbucket_task)
+    - [visualize\_raw\_data\_task:](#visualize_raw_data_task)
+    - [divide\_train\_eval\_test\_splits\_task:](#divide_train_eval_test_splits_task)
+    - [handle\_missing\_values\_task:](#handle_missing_values_task)
+    - [handle\_outliers\_in\_\*\_data\_task (for each dataset split):](#handle_outliers_in__data_task-for-each-dataset-split)
+    - [generate\_scheme\_and\_stats\_\*\_task (for each dataset split):](#generate_scheme_and_stats__task-for-each-dataset-split)
+    - [calculate\_and\_display\_anomalies\_\*\_task (for each dataset split):](#calculate_and_display_anomalies__task-for-each-dataset-split)
+    - [apply\_transformation\_\*\_task (for each dataset split):](#apply_transformation__task-for-each-dataset-split)
+    - [visualize\_\*\_refined\_data\_task (for each dataset split):](#visualize__refined_data_task-for-each-dataset-split)
+    - [Testing](#testing)
+    - [Logging and Tracking](#logging-and-tracking)
+    - [Data Version Control](#data-version-control)
+    - [Pipeline Optimization](#pipeline-optimization)
+    - [Schema and Statistics Generation](#schema-and-statistics-generation)
+    - [Anomalies Detection and Alerts](#anomalies-detection-and-alerts)
+  - [Model Pipeline Overview](#model-pipeline-overview)
+    - [Dividing Feature and Labels](#dividing-feature-and-labels)
+    - [Hyper Parameter Tuning](#hyper-parameter-tuning)
+    - [Modeling \& Training Phase](#modeling--training-phase)
+    - [Load and Predict](#load-and-predict)
+    - [Retraining DAG](#retraining-dag)
+    - [Deployment](#deployment)
+    - [Conclusion](#conclusion)
 
 
 ### Introduction
@@ -37,8 +51,8 @@ model: Holds the trained model files and serialization formats.
 
 We Created 2 branches
 
-1. [```dev```](https://github.com/aditya-prayaga/FinSight/tree/dev) for local development version with local storage & deployment
-2. [```main```](https://github.com/aditya-prayaga/FinSight) for production ready version with Google storage & deployment lined with google cloud compute service.
+1. [```dev```](https://github.com/shahdharmil11/FinSight/tree/dev) for local development version with local storage & deployment
+2. [```main```](https://github.com/shahdharmil11/FinSight) for production ready version with Google storage & deployment lined with google cloud compute service.
 
 We have Separated DAG tasks and its associated functions in 2 files namely ```finsight_pipeline_functions.py, finsight_pipeline_taks.py``` for code reusability it functionalities.
 
@@ -110,7 +124,7 @@ The User Installation Steps are as follows:
 
 1. Clone the git repository onto your local machine:
   ```
-  git clone https://github.com/aditya-prayaga/FinSight.git
+  git clone https://github.com/shahdharmil11/FinSight.git
   ```
 Note: 
   - Check if python version >= 3.8 using this command:
@@ -237,7 +251,7 @@ Depending on the CI/CD configuration, you can set up conditional triggers to per
 For example, if a test fails, you might want to stop the pipeline execution, notify relevant team members via email or messaging systems, or roll back changes if necessary.
 Conditional triggering of tasks can be achieved by defining appropriate failure conditions in the CI/CD configuration file (e.g., .gitlab-ci.yml etc.). These conditions can specify actions to take when tests fail, such as skipping deployment steps or initiating remediation processes.
 
-4. **Reporting Failure of Tasks:** In Docker compose up we have added application level reporting of the dag failure tasks. So when ever any dag fails an email is sent to prayaga.a@northeasten.edu email.
+4. **Reporting Failure of Tasks:** In Docker compose up we have added application level reporting of the dag failure tasks. So when ever any dag fails an email is sent to shah.dharmil@northeastern.edu email.
 
 **Note:** Few of the test cases failed but as the time project progress more will be added and integrated in the pipeline. Below is the Current Test Functionality
 ![x](./images/Test-Screenshot.png)
@@ -308,7 +322,7 @@ Covers the methods for detecting data anomalies and setting up alert systems. Th
 
 1. Anomaly Detection: Using the inferred schema and generated statistics, the function validates the data to detect any anomalies. These anomalies could be deviations from the expected data distribution, missing values, or outliers.
 2. Anomaly Visualization: Displaying the detected anomalies helps in understanding the nature and extent of data issues. Visualization tools provided by TFDV are used to make this process intuitive.
-3. Alerting Mechanism: Integrated Airflow with smtp server to mail prayaga.a@northeastern.edu if failed in any task.
+3. Alerting Mechanism: Integrated Airflow with smtp server to mail shah.dharmil@northeastern.edu if failed in any task.
 
 
 ```
@@ -415,7 +429,7 @@ Key Points:
 
 - Deployment happens when there is any merge happening to main branch that would trigger an **Rolling update** event via github actions. Github stores the gcp cred key as **Base64** encoded string in Github secrets.
 
-- We can see the dployments here via this link: https://github.com/aditya-prayaga/FinSight/actions/workflows/Pipeline_build.yaml
+- We can see the deployments here via this link: https://github.com/shahdharmil1/FinSight/actions/workflows/Pipeline_build.yaml
 
   ![x](./images/Deployment-Summary.png)
 
